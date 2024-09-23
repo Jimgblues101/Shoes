@@ -28,7 +28,8 @@ class PaymentDetailsFactoryTest {
                 "PayPal",
                 "Success",
                 LocalDateTime.parse("2024-06-12T12:00:00"),
-                LocalDateTime.parse("2024-06-12T12:00:00"));
+                LocalDateTime.parse("2024-06-12T12:00:00")
+        );
     }
 
     @Test

@@ -118,7 +118,8 @@ class OrderItemFactoryTest {
                 productSku,
                 2,
                 LocalDateTime.parse("2024-06-12T08:00"),
-                LocalDateTime.parse("2024-06-12T08:00"));
+                LocalDateTime.parse("2024-06-12T08:00")
+        );
     }
 
     @Test

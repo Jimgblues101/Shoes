@@ -43,7 +43,7 @@ class CategoryServiceTest {
 
     @AfterEach
     void tearDown() {
-        categoryService.delete(category.getId());
+        //categoryService.delete(category.getId());
     }
 
     @Test

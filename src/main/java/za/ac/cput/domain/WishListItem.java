@@ -61,7 +61,7 @@ public class WishListItem {
                 "id=" + id +
                 ", product=" + product.getName() +
                 ", dateAdded=" + dateAdded +
-                ", wishlist=" + wishlist +
+                ", wishlist=" + wishlist.getId() +
                 "}\n";
     }
 

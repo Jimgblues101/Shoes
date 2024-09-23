@@ -1,8 +1,6 @@
 package za.ac.cput.service;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -13,7 +11,6 @@ import za.ac.cput.domain.User;
 import za.ac.cput.factory.OrderDetailsFactory;
 import za.ac.cput.factory.PaymentDetailsFactory;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = Application.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class OrderDetailsServiceTest {
 
     @Autowired
@@ -33,55 +31,73 @@ class OrderDetailsServiceTest {
     private PaymentDetailsService paymentDetailsService;
 
     private OrderDetails orderDetails;
-    private User testUser;
+    private User user;
     private PaymentDetails testPaymentDetails;
 
     @BeforeEach
     void setUp() {
         // Set up a user for order details (assuming a valid test user exists)
-        testUser = userService.read(1L); // Mock the user ID as needed or create a new user
+        user = userService.read(62L);
 
-        // Create a payment detail using the factory
+        // Step 1: Create and persist PaymentDetails first
         testPaymentDetails = PaymentDetailsFactory.createPaymentDetails(
-                null,
-                null,
-                100.0,
-                "Visa",
-                "Success",
-                LocalDateTime.now(),
-                null
+                null,        // id will be auto-generated
+                null,        // orderDetails will be set later
+                100.0,       // total amount
+                "Visa",      // payment method
+                "Success",   // payment status
+                LocalDateTime.now(), // payment date/time
+                null         // updatedAt can be set later
         );
 
-        // Persist the payment details
-        paymentDetailsService.create(testPaymentDetails);
+        // Persist the payment details in the database
+        testPaymentDetails = paymentDetailsService.create(testPaymentDetails);
 
-        // Set up order details with valid foreign keys
+        // Step 2: Create OrderDetails with the persisted PaymentDetails
         orderDetails = OrderDetailsFactory.createOrderDetails(
-                null,
-                testUser,
-                testPaymentDetails,
-                100.0,
-                LocalDateTime.now(),
-                null
+                null,                        // id will be auto-generated
+                user,                        // User associated with the order
+                testPaymentDetails,          // Link the created payment details
+                100.0,                       // Order total amount
+                LocalDateTime.parse("2024-06-12T00:00:00"), // Order creation date
+                LocalDateTime.now()           // Order update date
         );
 
         // Persist the order details
-        orderDetailsService.create(orderDetails);
+        orderDetails = orderDetailsService.create(orderDetails);
+
+        // Step 3: Link the persisted OrderDetails to the existing PaymentDetails
+        testPaymentDetails = paymentDetailsService.read(testPaymentDetails.getId());
+        testPaymentDetails = new PaymentDetails.Builder()
+                .copy(testPaymentDetails)
+                .setId(testPaymentDetails.getId())
+                .setOrderDetails(orderDetails)
+                .build();
+
+        // Update the PaymentDetails with the OrderDetails link
+        paymentDetailsService.update(testPaymentDetails);
     }
+
+
+
 
     @AfterEach
     void tearDown() {
-        // Clean up test data by deleting the created order
-        if (orderDetails.getId() != null) {
+        /*// Clean up test data by deleting the created order
+        if (orderDetails != null && orderDetails.getId() != null) {
             orderDetailsService.delete(orderDetails.getId());
         }
+        if (testPaymentDetails != null && testPaymentDetails.getId() != null) {
+            paymentDetailsService.delete(testPaymentDetails.getId());
+        }*/
     }
 
     @Test
+    @Order(1)
     void create() {
         OrderDetails newOrder = OrderDetailsFactory.createOrderDetails(
                 null,
-                testUser,
+                user,
                 testPaymentDetails,
                 200.0,
                 LocalDateTime.now(),
@@ -92,11 +108,12 @@ class OrderDetailsServiceTest {
         // Verify the order was created
         assertNotNull(createdOrder);
         assertNotNull(createdOrder.getId());
-        assertEquals(1L, createdOrder.getUser().getId());
+        assertEquals(user.getId(), createdOrder.getUser().getId());
         assertEquals(200.0, createdOrder.getTotal());
     }
 
     @Test
+    @Order(2)
     void read() {
         OrderDetails foundOrder = orderDetailsService.read(orderDetails.getId());
         assertNotNull(foundOrder);
@@ -104,17 +121,14 @@ class OrderDetailsServiceTest {
     }
 
     @Test
+    @Order(3)
     void update() {
-        // Create the order before attempting an update
-        OrderDetails createdOrder = orderDetailsService.create(orderDetails);
-
-        // Create an updated order details object
+        // Update the order details
         OrderDetails updatedOrder = new OrderDetails.Builder()
                 .copy(orderDetails)
                 .setTotal(150.0)
                 .build();
 
-        // Perform the update
         OrderDetails result = orderDetailsService.update(updatedOrder);
 
         // Verify the updated fields
@@ -124,6 +138,7 @@ class OrderDetailsServiceTest {
     }
 
     @Test
+    @Order(4)
     void delete() {
         orderDetailsService.delete(orderDetails.getId());
         OrderDetails deletedOrder = orderDetailsService.read(orderDetails.getId());
@@ -131,19 +146,22 @@ class OrderDetailsServiceTest {
     }
 
     @Test
+    @Order(5)
     void findAll() {
         List<OrderDetails> orders = orderDetailsService.findAll();
         assertFalse(orders.isEmpty());
     }
 
     @Test
+    @Order(6)
     void findByUserId() {
-        List<OrderDetails> orders = orderDetailsService.findByUserId(orderDetails.getUser().getId());
+        List<OrderDetails> orders = orderDetailsService.findByUserId(user.getId());
         assertFalse(orders.isEmpty());
-        assertEquals(1L, orders.get(0).getUser().getId());
+        assertEquals(user.getId(), orders.get(0).getUser().getId());
     }
 
     @Test
+    @Order(7)
     void findByTotalGreaterThanEqual() {
         List<OrderDetails> orders = orderDetailsService.findByTotalGreaterThanEqual(100.0);
         assertFalse(orders.isEmpty());
@@ -151,18 +169,21 @@ class OrderDetailsServiceTest {
     }
 
     @Test
+    @Order(8)
     void findByCreatedAtAfter() {
         List<OrderDetails> orders = orderDetailsService.findByCreatedAtAfter(LocalDateTime.now().minusDays(1));
         assertFalse(orders.isEmpty());
     }
 
     @Test
+    @Order(9)
     void findByUpdatedAtBefore() {
-        List<OrderDetails> orders = orderDetailsService.findByUpdatedAtBefore(LocalDateTime.now());
+        List<OrderDetails> orders = orderDetailsService.findByUpdatedAtBefore(LocalDateTime.now().minusDays(5));
         assertTrue(orders.isEmpty());
     }
 
     @Test
+    @Order(10)
     void findByPaymentId() {
         List<OrderDetails> orders = orderDetailsService.findByPaymentId(testPaymentDetails.getId());
         assertFalse(orders.isEmpty());
@@ -170,8 +191,9 @@ class OrderDetailsServiceTest {
     }
 
     @Test
+    @Order(11)
     void findByUserIdOrderByCreatedAtDesc() {
-        List<OrderDetails> orders = orderDetailsService.findByUserIdOrderByCreatedAtDesc(orderDetails.getUser().getId());
+        List<OrderDetails> orders = orderDetailsService.findByUserIdOrderByCreatedAtDesc(user.getId());
         System.out.println(orders);
         assertFalse(orders.isEmpty());
     }

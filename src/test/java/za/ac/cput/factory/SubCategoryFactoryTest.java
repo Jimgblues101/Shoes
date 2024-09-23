@@ -24,8 +24,8 @@ class SubCategoryFactoryTest {
         subCategory = SubCategoryFactory.createSubCategory(
                 1L,
                 category,
-                "Electronics",
-                "Electronics sub-category",
+                "Sneakers",
+                "Sneakers",
                 LocalDateTime.parse("2024-06-12T07:00:00"),
                 null);
     }

@@ -30,7 +30,7 @@ public class Wishlist {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "wishlist", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "wishlist", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishListItem> wishListItems;
 
     private LocalDateTime createdAt;
@@ -52,7 +52,7 @@ public class Wishlist {
         return "Wishlist{" +
                 "id=" + id +
                 ", user=" + user +
-                ", wishListItems=" + wishListItems.size() +
+                ", wishListItems=" + wishListItems +
                 ", createdAt=" + createdAt +
                 ", deletedAt=" + deletedAt +
                 "}\n ";
