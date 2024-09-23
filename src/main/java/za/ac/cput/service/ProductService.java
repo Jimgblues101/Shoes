@@ -1,5 +1,6 @@
 package za.ac.cput.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import java.util.List;
  * Student Num: 220455430
  * @date 25-Aug-24
  */
-
+@Slf4j
 @Service
 @Transactional
 public class ProductService implements IProductService {
@@ -39,10 +40,26 @@ public class ProductService implements IProductService {
 
     @Override
     public Product update(Product product) {
-        if (productRepository.existsById(product.getId())) {
-            return productRepository.save(product);
+        Product existingProduct = productRepository.findById(product.getId()).orElse(null);
+        if (existingProduct != null) {
+            Product updatedProduct = new Product.Builder()
+                    .copy(existingProduct)
+                    .setId(existingProduct.getId())
+                    .setName(product.getName())
+                    .setDescription(product.getDescription())
+                    .setSummary(product.getSummary())
+                    .setCover(product.getCover())
+                    .setImageUrls(product.getImageUrls())
+                    .setSubCategory(product.getSubCategory())
+                    .setCreatedAt(product.getCreatedAt())
+                    .setDeletedAt(product.getDeletedAt())
+                    .build();
+            return productRepository.save(updatedProduct);
+        } else {
+            log.warn("Attempt to update a non-existent order item with ID: {}", product.getId());
+
+            return null;
         }
-        return null;
     }
 
     @Override

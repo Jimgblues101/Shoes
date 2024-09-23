@@ -2,20 +2,16 @@ package za.ac.cput.service;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import za.ac.cput.domain.*;
-import za.ac.cput.enums.ProductAttributeType;
-import za.ac.cput.factory.*;
+import za.ac.cput.factory.CartFactory;
+import za.ac.cput.factory.CartItemFactory;
 import za.ac.cput.repository.CartItemRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
@@ -28,6 +24,12 @@ class CartItemServiceTest {
 
     @Autowired
     private CartItemService cartItemService;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private ProductSkuService productSkuService;
+    @Autowired
+    private CartService cartService;
 
     @Autowired
     private CartItemRepository cartItemRepository;
@@ -35,26 +37,18 @@ class CartItemServiceTest {
     private Cart cart;
     private Product product;
     private ProductSku productSku;
-    private Set<String> roles;
+
     private User user;
     private CartItem cartItem;
+    @Autowired
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
-        roles = new HashSet<>();
-        roles.add("Admin");
-        roles.add("User");
 
-        user = UserFactory.createUser(
-                null,
-                "avatar.jpg",
-                "John",
-                "Doe",
-                "johndoe@example.com",
-                LocalDate.parse("1990-01-01"),
-                roles,
-                "0123456789",
-                "password123");
+        user = userService.read(61L);
+        product = productService.read(59L);
+        productSku = productSkuService.read(1L);
 
         cart = CartFactory.createCart(
                 1L,
@@ -64,93 +58,21 @@ class CartItemServiceTest {
                 LocalDateTime.now()
         );
 
-        // Create a sample Product
-        ImageUrls imageUrls = ImageUrlsFactory.createImageUrls(
-                "image1.jpg",
-                "image2.jpg",
-                "image3.jpg",
-                "image4.jpg"
-        );
-
-        Category category = CategoryFactory.createCategory(
-                1L,
-                "Sneakers",
-                "Sneakers",
-                LocalDateTime.now(),
-                null
-        );
-
-        SubCategory subCategory = SubCategoryFactory.createSubCategory(
-                1L,
-                category,
-                "High Tops",
-                "High Top Sneakers",
-                LocalDateTime.now(),
-                null
-        );
-
-        product = ProductFactory.createProduct(
-                1L,
-                "Product Name",
-                "Product Description",
-                "Product Summary",
-                "Product Cover",
-                imageUrls,
-                List.of(subCategory),
-                LocalDateTime.now(),
-                null
-        );
-
-        ProductAttribute sizeAttribute = ProductAttributeFactory.createProductAttribute(
-                null,
-                ProductAttributeType.SIZE,
-                "10",
-                LocalDateTime.now(),
-                null
-        );
-
-        ProductAttribute colorAttribute = ProductAttributeFactory.createProductAttribute(
-                null,
-                ProductAttributeType.COLOR,
-                "Green",
-                LocalDateTime.now(),
-                null
-        );
-
-        ProductAttribute brandAttribute = ProductAttributeFactory.createProductAttribute(
-                null,
-                ProductAttributeType.BRAND,
-                "Nike",
-                LocalDateTime.now(),
-                null
-        );
-
-        productSku = ProductSkuFactory.createProductSku(
-                null,
-                product,
-                sizeAttribute,
-                colorAttribute,
-                brandAttribute,
-                "SKU-123",
-                100.0,
-                10,
-                LocalDateTime.now(),
-                null
-        );
-
+        cart = cartService.create(cart);
+        Cart carts = cartService.read(cart.getId());
         // Create a CartItem
         cartItem = CartItemFactory.createCartItem(
                 null,
-                cart,
+                carts,
                 product,
                 productSku,
-                2 // quantity
+                2
         );
     }
 
     @AfterEach
     void tearDown() {
-        cartItemRepository.deleteAll();
+        //   cartItemRepository.deleteAll();
     }
 
     @Test
@@ -173,15 +95,26 @@ class CartItemServiceTest {
     @Test
     @Order(3)
     void update() {
+        // Create a CartItem first to ensure we have an item to update
         CartItem createdItem = cartItemService.create(cartItem);
 
-        createdItem = new CartItem.Builder()
-                .copy(createdItem)
-                .setCart(createdItem.getCart())
-                .setQuantity(3)
-                .build()
-        ;
-        CartItem updatedItem = cartItemService.update(createdItem);
+        // Read the item we just created
+        CartItem item = cartItemService.read(createdItem.getId());
+        assertNotNull(item); // Ensure the item exists
+
+        // Log the current state for debugging
+        System.out.println("Current Item: " + item);
+
+        // Create an updated item based on the original
+        CartItem updatedCartItem = new CartItem.Builder()
+                .copy(item)
+                .setQuantity(3) // Set new quantity
+                .build();
+
+        // Update the item
+        CartItem updatedItem = cartItemService.update(updatedCartItem);
+
+        // Check that the updated quantity is as expected
         assertEquals(3, updatedItem.getQuantity());
     }
 

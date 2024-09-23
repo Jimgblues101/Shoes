@@ -64,18 +64,20 @@ public class CartItemService implements ICartItemService {
      */
     @Override
     public CartItem update(CartItem cartItem) {
-        if (cartItem.getId() == null) {
-            throw new IllegalArgumentException("CartItem with the given ID does not exist.");
+        CartItem existingCartItem = cartItemRepository.findById(cartItem.getId()).orElse(null);
+        if (existingCartItem != null) {
+            CartItem updatedCartItem = new CartItem.Builder()
+                    .copy(existingCartItem)
+                    .setId(existingCartItem.getId())
+                    .setCart(cartItem.getCart())
+                    .setProduct(cartItem.getProduct())
+                    .setProductSku(cartItem.getProductSku())
+                    .setQuantity(cartItem.getQuantity())
+                    .build();
+            return cartItemRepository.save(updatedCartItem);
+        } else {
+            throw new IllegalArgumentException("Attempt to update a non-existent cart item with ID: " + cartItem.getId());
         }
-        CartItem existingCartItem = cartItemRepository.findById(cartItem.getCart().getId()).orElseThrow();
-        CartItem updatedCartItem = CartItemFactory.createCartItem(
-                existingCartItem.getId(),
-                cartItem.getCart(),
-                cartItem.getProduct(),
-                cartItem.getProductSku(),
-                cartItem.getQuantity()
-                );
-        return cartItemRepository.save(updatedCartItem);
     }
 
     /**

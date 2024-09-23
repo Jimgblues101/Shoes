@@ -1,8 +1,9 @@
 package za.ac.cput.service;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import za.ac.cput.domain.Cart;
 import za.ac.cput.domain.User;
 import za.ac.cput.factory.CartFactory;
@@ -11,22 +12,22 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class CartServiceTest {
+    @Autowired
+    private CartService cartService;
+
+    @Autowired
+    private UserService userService;
+
     private Cart cart;
     private User user;
 
     @BeforeEach
     void setUp() {
-        // Create a sample User object
-        user = new User.Builder()
-                .setFirstName("Rethabile")
-                .setLastName("Ntsekhe")
-                .setEmail("rethabile1154@gmail.com") // Ensure email matches used in tests
-                .setPassword("password") // Use encoded password
-                .setRole(Set.of("USER", "ADMIN"))
-                .setBirthDate(LocalDate.of(1990, 1, 1))
-                .setPhoneNumber("1234567890")
-                .build();
+        User user = userService.read(61L);
 
         // Create a sample Cart object using the factory method
         cart = CartFactory.createCart(
