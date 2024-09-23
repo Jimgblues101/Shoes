@@ -13,5 +13,5 @@ import java.util.List;
  */
 
 public interface IWishListItemsServivce extends IService<WishListItem, Long> {
-
+    void deleteByWishlistId(Long wishlistId);
 }

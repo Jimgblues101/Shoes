@@ -26,10 +26,12 @@ import java.util.stream.Collectors;
 public class WishlistService implements iWishlistService {
 
     private final WishlistRepository wishlistRepository;
+    private final WishListItemService wishListItemService;
 
     @Autowired
-    public WishlistService(WishlistRepository wishlistRepository) {
+    public WishlistService(WishlistRepository wishlistRepository, WishListItemService wishListItemService) {
         this.wishlistRepository = wishlistRepository;
+        this.wishListItemService = wishListItemService;
     }
 
     /**
@@ -95,7 +97,8 @@ public class WishlistService implements iWishlistService {
      */
     @Override
     public void delete(Long id) {
-        wishlistRepository.deleteById(id); // Remove the wishlist by its ID
+        wishListItemService.deleteByWishlistId(id);
+        wishlistRepository.deleteById(id);
     }
 
     /**

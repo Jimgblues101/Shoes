@@ -6,8 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import za.ac.cput.domain.OrderDetails;
 import za.ac.cput.factory.OrderDetailsFactory;
 import za.ac.cput.repository.OrderDetailsRepository;
+import za.ac.cput.repository.OrderItemRepository;
+import za.ac.cput.repository.PaymentDetailsRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,10 +25,14 @@ import java.util.List;
 public class OrderDetailsService implements IOrderDetailsService {
 
     private final OrderDetailsRepository orderDetailsRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final PaymentDetailsRepository paymentDetailsRepository;
 
     @Autowired
-    public OrderDetailsService(OrderDetailsRepository orderDetailsRepository) {
+    public OrderDetailsService(OrderDetailsRepository orderDetailsRepository, OrderItemRepository orderItemRepository, PaymentDetailsRepository paymentDetailsRepository) {
         this.orderDetailsRepository = orderDetailsRepository;
+        this.orderItemRepository = orderItemRepository;
+        this.paymentDetailsRepository = paymentDetailsRepository;
     }
 
     @Override
@@ -61,6 +66,8 @@ public class OrderDetailsService implements IOrderDetailsService {
 
     @Override
     public void delete(Long id) {
+        orderItemRepository.deleteOrderItemByOrderDetails_Id(id);
+        paymentDetailsRepository.deleteByOrderDetailsId(id);
         orderDetailsRepository.deleteById(id);
     }
 

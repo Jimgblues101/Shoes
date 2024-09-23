@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import za.ac.cput.domain.Product;
 import za.ac.cput.domain.WishListItem;
 import za.ac.cput.domain.Wishlist;
+import za.ac.cput.repository.WishListItemRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,9 @@ class WishListItemServiceTest {
     @Autowired
     private WishListItemService service;
 
+    @Autowired
+    private WishListItemRepository repository;
+
     private Product product;
     private Wishlist wishlist;
     private List<WishListItem> wishListItems;
@@ -31,8 +35,8 @@ class WishListItemServiceTest {
 
     @BeforeEach
     void setUp() {
-        product = productService.read(58L);  // Fetching a product from the database
-        wishlist = wishlistService.read(90L); // Fetching a wishlist from the database
+        product = productService.read(1L);  // Fetching a product from the database
+        wishlist = wishlistService.read(1L); // Fetching a wishlist from the database
 
         // Create WishListItems
         WishListItem item1 = new WishListItem.Builder()
@@ -57,7 +61,7 @@ class WishListItemServiceTest {
 
     @AfterEach
     void tearDown() {
-      //  service.deleteAll(); // Optional, to clean up after each test
+        repository.deleteAll(); // Optional, to clean up after each test
     }
 
     @Test

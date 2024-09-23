@@ -29,15 +29,15 @@ public class ProductSku {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "size_attribute_id", nullable = false)
     private ProductAttribute sizeAttribute;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "color_attribute_id", nullable = false)
     private ProductAttribute colorAttribute;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "brand_attribute_id", nullable = false)
     private ProductAttribute brandAttribute;
 

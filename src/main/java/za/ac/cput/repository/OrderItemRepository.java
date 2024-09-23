@@ -14,5 +14,7 @@ import za.ac.cput.domain.OrderItem;
 
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
-    // Additional query methods if needed
+   void deleteOrderItemByOrderDetails_Id(Long orderDetailsId);
+
+
 }

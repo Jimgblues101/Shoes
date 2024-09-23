@@ -1,12 +1,12 @@
 package za.ac.cput.service;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.DirtiesContext;
 import za.ac.cput.Application;
 import za.ac.cput.domain.User;
 import za.ac.cput.factory.UserFactory;
@@ -18,8 +18,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @SpringBootTest(classes = Application.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = AFTER_CLASS)
 class UserServiceTest {
 
     @Autowired
@@ -43,7 +46,7 @@ class UserServiceTest {
                     .setLastName("Ntsekhe")
                     .setEmail("rethabile1154@gmail.com") // Ensure email matches used in tests
                     .setPassword(passwordEncoder.encode("password")) // Use encoded password
-                    .setRole(Set.of("USER"))
+                    .setRole(Set.of("USER","ADMIN"))
                     .setBirthDate(LocalDate.of(1990, 1, 1))
                     .setPhoneNumber("1234567890")
                     .build();
@@ -55,19 +58,9 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(1)
     void testCreateUser() {
-        User newUser = UserFactory.createUser(
-                null,
-                "avatar.jpg",
-                "Rethabile",
-                "Ntsekhe",
-                "rethabile1154@gmail.com",
-                LocalDate.parse("1990-01-01"),
-                Set.of("USER", "ADMIN"),
-                "0123456789",
-                "password123");
-
-        User createdUser = userService.create(newUser);
+        User createdUser = userService.create(user);
 
         assertNotNull(createdUser);
         assertEquals("Rethabile", createdUser.getFirstName());
@@ -75,6 +68,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(2)
     void testReadUser() {
         User foundUser = userService.read(user.getId());
         assertNotNull(foundUser);
@@ -82,6 +76,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(3)
     void testUpdateUser() {
         user = new User.Builder()
                 .copy(user)
@@ -99,6 +94,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(4)
     void testFindAllUsers() {
         List<User> users = userService.findAll();
         System.out.println("All Users :" + '\n' + users + '\n');
@@ -106,6 +102,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(5)
     void testLoadUserByUsername() {
         UserDetails userDetails = userService.loadUserByUsername("rethabile1154@gmail.com");
         System.out.println("Found By Username: " + userDetails + '\n');
@@ -114,12 +111,14 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(6)
     void testLoadUserByUsernameNotFound() {
         assertThrows(UsernameNotFoundException.class,
                 () -> userService.loadUserByUsername("unknown@example.com"));
     }
 
     @Test
+    @Order(7)
     void testFindByEmail() {
         Optional<User> foundUser = userService.findByEmail("rethabile1154@gmail.com");
         System.out.println("Found By Email: " + '\n' + foundUser);
@@ -128,6 +127,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(8)
     void testFindByFirstName() {
         List<User> users = userService.findByFirstName("Rethabile");
         System.out.println("Found By First Name: " + users);
@@ -136,6 +136,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(9)
     void testFindByLastName() {
         List<User> users = userService.findByLastName("Ntsekhe");
         System.out.println("Found By Last Name: " + users);
@@ -144,6 +145,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(10)
     void testFindByBirthDate() {
         List<User> users = userService.findByBirthDate(LocalDate.of(1990, 1, 1));
         System.out.println("Found By Birthday: " + users);
@@ -152,6 +154,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(11)
     void testFindByPhoneNumber() {
         List<User> users = userService.findByPhoneNumber("1234567890");
         System.out.println("Found By Phone Number: " + users);
@@ -160,6 +163,7 @@ class UserServiceTest {
     }
 
     @Test
+    @Order(12)
     void testFindByRole() {
         List<User> users = userService.findByRole("USER");
         System.out.println("Found By Roles: " + users);

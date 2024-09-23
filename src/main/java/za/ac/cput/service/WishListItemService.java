@@ -74,4 +74,9 @@ public class WishListItemService implements IWishListItemsServivce {
             throw new IllegalArgumentException("WishlistItem with ID " + id + " does not exist");
         }
     }
+
+    @Override
+    public void deleteByWishlistId(Long wishlistId) {
+        repository.deleteByWishlistId(wishlistId);
+    }
 }

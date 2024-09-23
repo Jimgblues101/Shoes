@@ -1,8 +1,6 @@
 package za.ac.cput.service;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -20,6 +18,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @SpringBootTest(classes = Application.class)
 @DirtiesContext(classMode = AFTER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CategoryServiceTest {
 
     @Autowired
@@ -43,10 +42,11 @@ class CategoryServiceTest {
 
     @AfterEach
     void tearDown() {
-        //categoryService.delete(category.getId());
+       // categoryService.delete(category.getId());
     }
 
     @Test
+    @Order(1)
     void create() {
         Category createdCategory = categoryService.create(CategoryFactory.createCategory(
                 null,
@@ -61,6 +61,7 @@ class CategoryServiceTest {
     }
 
     @Test
+    @Order(2)
     void read() {
         Category foundCategory = categoryService.read(category.getId());
         System.out.println(foundCategory);
@@ -69,6 +70,7 @@ class CategoryServiceTest {
     }
 
     @Test
+    @Order(3)
     void update() {
         updatedCategory = new Category.Builder()
                 .copy(category)
@@ -81,6 +83,7 @@ class CategoryServiceTest {
     }
 
     @Test
+    @Order(4)
     void delete() {
         categoryService.delete(category.getId());
         Category deletedCategory = categoryService.read(category.getId());
@@ -89,42 +92,49 @@ class CategoryServiceTest {
     }
 
     @Test
+    @Order(5)
     void findAll() {
         List<Category> categories = categoryService.findAll();
         assertFalse(categories.isEmpty());
     }
 
     @Test
+    @Order(6)
     void findByName() {
         List<Category> categories = categoryService.findByName("Art");
         assertFalse(categories.isEmpty());
     }
 
     @Test
+    @Order(7)
     void findByCreatedAtAfter() {
         List<Category> categories = categoryService.findByCreatedAtAfter(LocalDateTime.now().minusDays(1));
         assertFalse(categories.isEmpty());
     }
 
     @Test
+    @Order(8)
     void findByDeletedAt() {
         List<Category> categories = categoryService.findByDeletedAt(null);
         assertTrue(categories.isEmpty());
     }
 
     @Test
+    @Order(9)
     void findByNameContaining() {
         List<Category> categories = categoryService.findByNameContaining("Art");
         assertFalse(categories.isEmpty());
     }
 
     @Test
+    @Order(10)
     void findByDescriptionContaining() {
         List<Category> categories = categoryService.findByDescriptionContaining("products");
         assertFalse(categories.isEmpty());
     }
 
     @Test
+    @Order(11)
     void findCategoriesCreatedWithinDateRange() {
         List<Category> categories = categoryService.findCategoriesCreatedWithinDateRange(
                 LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1));
@@ -132,6 +142,7 @@ class CategoryServiceTest {
     }
 
     @Test
+    @Order(12)
     void findMostRecentlyCreatedCategory() {
         Category recentCategory = categoryService.findMostRecentlyCreatedCategory();
         System.out.println(recentCategory);
@@ -139,6 +150,7 @@ class CategoryServiceTest {
     }
 
     @Test
+    @Order(13)
     void findAllDeletedCategories() {
         Optional<Category> deletedCategories = categoryService.findByDeletedAtIsNotNull();
         assertTrue(deletedCategories.isEmpty());

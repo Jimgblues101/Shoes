@@ -68,4 +68,9 @@ public class OrderItemService implements IOrderItemService {
     public List<OrderItem> findAll() {
         return orderItemRepository.findAll();
     }
+
+    @Override
+    public void deleteOrderItemByOrderDetails_Id(Long orderId) {
+        orderItemRepository.deleteOrderItemByOrderDetails_Id(orderId);
+    }
 }

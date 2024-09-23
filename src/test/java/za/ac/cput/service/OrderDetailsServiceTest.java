@@ -65,26 +65,12 @@ class OrderDetailsServiceTest {
 
         // Persist the order details
         orderDetails = orderDetailsService.create(orderDetails);
-
-        // Step 3: Link the persisted OrderDetails to the existing PaymentDetails
-        testPaymentDetails = paymentDetailsService.read(testPaymentDetails.getId());
-        testPaymentDetails = new PaymentDetails.Builder()
-                .copy(testPaymentDetails)
-                .setId(testPaymentDetails.getId())
-                .setOrderDetails(orderDetails)
-                .build();
-
-        // Update the PaymentDetails with the OrderDetails link
-        paymentDetailsService.update(testPaymentDetails);
     }
-
-
-
 
     @AfterEach
     void tearDown() {
-        /*// Clean up test data by deleting the created order
-        if (orderDetails != null && orderDetails.getId() != null) {
+        // Clean up test data by deleting the created order
+        /*if (orderDetails != null && orderDetails.getId() != null) {
             orderDetailsService.delete(orderDetails.getId());
         }
         if (testPaymentDetails != null && testPaymentDetails.getId() != null) {

@@ -1,11 +1,13 @@
 package za.ac.cput.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.ac.cput.domain.ProductAttribute;
 import za.ac.cput.repository.ProductAttributeRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,6 +18,7 @@ import java.util.List;
  * @date 25-Aug-24
  */
 
+@Slf4j
 @Service
 @Transactional
 public class ProductAttributeService implements IProductAttributeService {
@@ -39,15 +42,23 @@ public class ProductAttributeService implements IProductAttributeService {
 
     @Override
     public ProductAttribute update(ProductAttribute productAttribute) {
-        if(productAttribute == null || !productAttributeRepository.existsById(productAttribute.getId())) {
-            throw new IllegalArgumentException("Cart with the given ID does not exist.");
-        }
+        ProductAttribute existingProductAttribute = productAttributeRepository.findById(productAttribute.getId()).orElse(null);
 
-        if (productAttributeRepository.existsById(productAttribute.getId())) {
-            return productAttributeRepository.save(productAttribute);
+        if (existingProductAttribute != null) {
+            ProductAttribute updatedProductAttribute = new ProductAttribute.Builder()
+                    .copy(productAttribute)
+                    .setId(existingProductAttribute.getId())
+                    .setType(productAttribute.getType())
+                    .setValue(productAttribute.getValue())
+                    .setCreatedAt(existingProductAttribute.getCreatedAt())
+                    .setUpdatedAt(LocalDateTime.now())
+                    .build();
+            return productAttributeRepository.save(updatedProductAttribute);
         }
+        log.warn("Attempt to update a non-existent product attribute with ID: {}", productAttribute.getId());
         return null;
     }
+
 
     @Override
     public void delete(Long id) {

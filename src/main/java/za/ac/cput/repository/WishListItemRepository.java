@@ -12,5 +12,5 @@ import za.ac.cput.domain.WishListItem;
  */
 
 public interface WishListItemRepository extends JpaRepository<WishListItem, Long> {
-    // Additional query methods if needed
+    void deleteByWishlistId(Long wishlistId);
 }

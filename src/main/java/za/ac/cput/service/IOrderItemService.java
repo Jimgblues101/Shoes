@@ -12,5 +12,5 @@ import za.ac.cput.domain.OrderItem;
  */
 
 public interface IOrderItemService extends IService<OrderItem, Long>{
-
+    void deleteOrderItemByOrderDetails_Id(Long orderId);
 }

@@ -53,7 +53,7 @@ class PaymentDetailsServiceTest {
 
     @AfterEach
     void tearDown() {
-        paymentDetailsRepository.deleteAll();
+        //paymentDetailsRepository.deleteAll();
     }
 
     @Test
