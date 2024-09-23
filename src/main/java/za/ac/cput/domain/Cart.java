@@ -55,7 +55,7 @@ public class Cart {
     public String toString() {
         return "\n Cart{" +
                 "id=" + id +
-                ", user=" + user +
+                ", user=" + user.getFirstName() +
                 ", total=" + total +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

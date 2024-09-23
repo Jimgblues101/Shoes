@@ -1,8 +1,6 @@
 package za.ac.cput.service;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -24,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @SpringBootTest(classes = Application.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = AFTER_CLASS)
 class AddressServiceTest {
 
@@ -36,25 +35,12 @@ class AddressServiceTest {
     private Address address;
     private User user;
     private Set<String> roles;
+    @Autowired
+    private UserService userService;
 
     @BeforeEach
     void setup() {
-        // Set up a sample set of roles
-        roles = new HashSet<>();
-        roles.add("Admin");
-        roles.add("User");
-
-        // Set up a sample User object using the factory method
-        user = UserFactory.createUser(
-                null,
-                "avatar.jpg",
-                "Rethabile",
-                "Ntsekhe",
-                "servicetest@address.com",
-                LocalDate.parse("1990-01-01"),
-                roles,
-                "0123456789",
-                "password123");
+        user = userService.read(62L);
 
         // Set up an Address object associated with the user
         address = new Address.Builder()
@@ -78,6 +64,7 @@ class AddressServiceTest {
     }
 
     @Test
+    @Order(1)
     void testCreateAddress() {
         Address createdAddress = addressService.create(address);
         assertNotNull(createdAddress);
@@ -85,6 +72,7 @@ class AddressServiceTest {
     }
 
     @Test
+    @Order(2)
     void testReadAddress() {
         Address createdAddress = addressService.create(address);
         Address readAddress = addressService.read(createdAddress.getId());
@@ -93,6 +81,7 @@ class AddressServiceTest {
     }
 
     @Test
+    @Order(3)
     void testUpdateAddress() {
         Address createdAddress = addressService.create(address);
         System.out.println("Created for test update by Id"+'\n'+createdAddress+'\n');
@@ -108,6 +97,7 @@ class AddressServiceTest {
     }
 
     @Test
+    @Order(4)
     void testFindAllAddresses() {
         addressService.create(address); // Create the address for testing
         List<Address> addresses = addressService.findAll();
@@ -116,6 +106,7 @@ class AddressServiceTest {
     }
 
     @Test
+    @Order(5)
     void testFindByUser() {
         addressService.create(address); // Ensure address is created
         System.out.println("Created address"+ address);
@@ -124,6 +115,7 @@ class AddressServiceTest {
     }
 
     @Test
+    @Order(6)
     void testFindByTitle() {
         addressService.create(address); // Ensure address is created
         List<Address> addresses = addressService.findByTitle("Home"); // Match the title used in setup

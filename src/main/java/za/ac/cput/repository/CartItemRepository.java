@@ -52,4 +52,29 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
      * @return a list of CartItems with the given quantity
      */
     List<CartItem> findByQuantity(int quantity);
+
+    /**
+     * Finds CartItems by their associated Cart ID and Product ID.
+     *
+     * @param cartId the ID of the Cart entity to search by
+     * @param productId the ID of the Product entity to search by
+     * @return a list of CartItems associated with the given Cart ID and Product ID
+     */
+    List<CartItem> findByCartIdAndProductId(Long cartId, Long productId);
+
+    /**
+     * Finds CartItems by their associated Cart ID and Product SKU ID.
+     *
+     * @param cartId the ID of the Cart entity to search by
+     * @param productSkuId the ID of the ProductSku entity to search by
+     * @return a list of CartItems associated with the given Cart ID and Product SKU ID
+     */
+    List<CartItem> findByCartIdAndProductSkuId(Long cartId, Long productSkuId);
+
+    /**
+     * Deletes CartItems by their associated Cart ID.
+     *
+     * @param cartId the ID of the Cart entity to search by
+     */
+    void deleteByCartId(Long cartId);
 }

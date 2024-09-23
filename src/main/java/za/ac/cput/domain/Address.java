@@ -20,7 +20,7 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -66,7 +66,7 @@ public class Address {
     public String toString() {
         return "\n Address{" +
                 "id=" + id +
-                ", user=" + user +
+                ", user=" + user.getFirstName() +
                 ", title='" + title + '\'' +
                 ", addressLine1='" + addressLine1 + '\'' +
                 ", addressLine2='" + addressLine2 + '\'' +

@@ -51,26 +51,25 @@ public class AddressService implements IAddressService {
 
     @Override
     public Address update(Address address) {
-    if (address.getUser() == null || !addressRepository.existsById(address.getUser().getId())) {
-            throw new IllegalArgumentException("Address with the given UserID does not exist.");
+        Address existingAddress = addressRepository.findById(address.getId()).orElse(null);
+        if (existingAddress != null) {
+            Address updatedAddress = new Address.Builder()
+                    .copy(existingAddress)
+                    .setTitle(address.getTitle())
+                    .setAddressLine1(address.getAddressLine1())
+                    .setAddressLine2(address.getAddressLine2())
+                    .setCountry(address.getCountry())
+                    .setCity(address.getCity())
+                    .setPostalCode(address.getPostalCode())
+                    .setPhoneNumber(address.getPhoneNumber())
+                    .setCreatedAt(address.getCreatedAt())
+                    .setUpdatedAt(address.getUpdatedAt())
+                    .build();
+            return addressRepository.save(updatedAddress);
+        } else {
+            return null;
         }
-
-        Address updatedAddress = new Address.Builder()
-                .setUser(address.getUser())
-                .setTitle(address.getTitle())
-                .setAddressLine1(address.getAddressLine1())
-                .setAddressLine2(address.getAddressLine2())
-                .setCity(address.getCity())
-                .setCountry(address.getCountry())
-                .setPostalCode(address.getPostalCode())
-                .setPhoneNumber(address.getPhoneNumber())
-                .setCreatedAt(address.getCreatedAt())
-            .setUpdatedAt(LocalDateTime.now()) // Update timestamp on update
-                .build();
-
-        return addressRepository.save(updatedAddress);
     }
-
 
     @Override
     public List<Address> findAll() {

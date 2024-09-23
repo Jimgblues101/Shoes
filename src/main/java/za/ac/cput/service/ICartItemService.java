@@ -46,4 +46,6 @@ public interface ICartItemService extends IService<CartItem, Long> {
      * @return a list of CartItems with the given quantity
      */
     List<CartItem> findByQuantity(int quantity);
+
+    void deleteByCartId(Long cartId);
 }

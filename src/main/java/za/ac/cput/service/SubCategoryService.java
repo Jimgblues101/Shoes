@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.ac.cput.domain.SubCategory;
 import za.ac.cput.repository.SubCategoryRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -38,10 +39,21 @@ public class SubCategoryService implements ISubCategoryService {
 
     @Override
     public SubCategory update(SubCategory subCategory) {
-        if (subCategoryRepository.existsById(subCategory.getId())) {
-            return subCategoryRepository.save(subCategory);
+        SubCategory existingSubCategory = subCategoryRepository.findById(subCategory.getId()).orElse(null);
+        if (existingSubCategory != null) {
+            SubCategory updatedSubCategory = new SubCategory.Builder()
+                    .copy(existingSubCategory)
+                    .setId(existingSubCategory.getId())
+                    .setCategory(subCategory.getCategory())
+                    .setName(subCategory.getName())
+                    .setDescription(subCategory.getDescription())
+                    .setCreatedAt(existingSubCategory.getCreatedAt())
+                    .setDeletedAt(existingSubCategory.getDeletedAt())
+                    .build();
+            return subCategoryRepository.save(updatedSubCategory);
+        } else {
+            return null;
         }
-        return null;
     }
 
     @Override

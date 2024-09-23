@@ -57,10 +57,22 @@ public class UserService implements UserDetailsService, IUserService {
 
     @Override
     public User update(User user) {
-        if (userRepository.existsById(user.getId())) {
-            return userRepository.save(user);
+        User existingUser = userRepository.findById(user.getId()).orElse(null);
+        if (existingUser != null) {
+            User updatedUser = new User.Builder()
+                    .copy(existingUser)
+                    .setFirstName(user.getFirstName())
+                    .setLastName(user.getLastName())
+                    .setBirthDate(user.getBirthDate())
+                    .setPhoneNumber(user.getPhoneNumber())
+                    .setEmail(user.getEmail())
+                    .setPassword(user.getPassword())
+                    .setRole(user.getRole())
+                    .build();
+            return userRepository.save(updatedUser);
+        } else {
+            return null;
         }
-        return null;
     }
 
     @Override

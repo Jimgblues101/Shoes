@@ -143,4 +143,9 @@ public class CartItemService implements ICartItemService {
     public List<CartItem> findByQuantity(int quantity) {
         return cartItemRepository.findByQuantity(quantity);
     }
+
+    @Override
+    public void deleteByCartId(Long cartId) {
+        cartItemRepository.deleteByCartId(cartId);
+    }
 }

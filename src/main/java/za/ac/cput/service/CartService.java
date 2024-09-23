@@ -28,10 +28,12 @@ import java.util.List;
 public class CartService implements ICartService {
 
     private final CartRepository cartRepository;
+    private final CartItemService cartItemService;
 
     @Autowired
-    public CartService(CartRepository cartRepository) {
+    public CartService(CartRepository cartRepository, CartItemService cartItemService) {
         this.cartRepository = cartRepository;
+        this.cartItemService = cartItemService;
     }
 
     /**
@@ -87,7 +89,9 @@ public class CartService implements ICartService {
      */
     @Override
     public void delete(Long id) {
+        cartItemService.deleteByCartId(id);
         cartRepository.deleteById(id);
+
     }
 
     /**
