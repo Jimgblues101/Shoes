@@ -13,6 +13,13 @@ target/
 *.ipr
 .idea/workspace.xml
 *.properties
+.idea/dataSources.xml
+.idea/sqlDataSources.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea
 
 ### Eclipse ###
 .apt_generated
