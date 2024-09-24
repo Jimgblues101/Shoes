@@ -40,7 +40,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     /**
      * Finds CartItems by their associated Product SKU ID.
      *
-     * @param productSkuId the ID of the ProductSku entity to search by
+     * @param productSkuId the ID of the ProductSkuService entity to search by
      * @return a list of CartItems associated with the given Product SKU ID
      */
     List<CartItem> findByProductSkuId(Long productSkuId);
@@ -66,7 +66,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
      * Finds CartItems by their associated Cart ID and Product SKU ID.
      *
      * @param cartId the ID of the Cart entity to search by
-     * @param productSkuId the ID of the ProductSku entity to search by
+     * @param productSkuId the ID of the ProductSkuService entity to search by
      * @return a list of CartItems associated with the given Cart ID and Product SKU ID
      */
     List<CartItem> findByCartIdAndProductSkuId(Long cartId, Long productSkuId);

@@ -13,7 +13,7 @@ import java.util.List;
  * @date 25-Aug-24
  */
 
-public interface IOrderDetailsService extends IService<OrderDetails, Long>{
+public interface IOrderDetails extends IService<OrderDetails, Long>{
     /**
      * Finds all orders by a specific user ID.
      *

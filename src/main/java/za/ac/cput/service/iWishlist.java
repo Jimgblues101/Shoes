@@ -10,6 +10,6 @@ import za.ac.cput.domain.Wishlist;
  * @date 25-Aug-24
  */
 
-public interface iWishlistService extends IService<Wishlist, Long>{
+public interface iWishlist extends IService<Wishlist, Long>{
 
 }

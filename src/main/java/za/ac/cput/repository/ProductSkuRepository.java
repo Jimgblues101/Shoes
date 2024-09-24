@@ -8,7 +8,7 @@ import java.util.Optional;
 
 /**
  * Repository interface for {@link ProductSku} entity.
- * Provides methods to perform CRUD operations on ProductSku entities.
+ * Provides methods to perform CRUD operations on ProductSkuService entities.
  *
  * @autor Rethabile Ntsekhe
  * @date 25-Aug-24

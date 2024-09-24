@@ -62,7 +62,7 @@ class OrderItemFactoryTest {
         subCategory = List.of(subCategory1, subCategory2);
 
 
-        // Set up sample OrderDetails, Product, and ProductSku objects
+        // Set up sample OrderDetails, Product, and ProductSkuService objects
         orderDetails = new OrderDetails(); // Initialize a sample OrderDetails object
         // Create a sample Product object using the factory method
         product = ProductFactory.createProduct(
@@ -167,7 +167,7 @@ class OrderItemFactoryTest {
 
     @Test
     void testCreateOrderItem_WithNullProductSku_ThrowsIllegalArgumentException() {
-        // Try to create an OrderItem object with null ProductSku
+        // Try to create an OrderItem object with null ProductSkuService
         assertThrows(IllegalArgumentException.class,
                 () -> OrderItemFactory.createOrderItem(
                         1L,
@@ -179,6 +179,6 @@ class OrderItemFactoryTest {
                         LocalDateTime.parse("2024-06-12T08:00")));
 
         // Print a message to the terminal indicating that an exception was thrown
-        System.out.println("Expected IllegalArgumentException thrown when creating OrderItem with null ProductSku");
+        System.out.println("Expected IllegalArgumentException thrown when creating OrderItem with null ProductSkuService");
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
  * Student Num: 220455430
  * @date 25-Aug-24
  */
-public interface IPaymentDetailsService extends IService<PaymentDetails, Long> {
+public interface IPaymentDetails extends IService<PaymentDetails, Long> {
 
     /**
      * Finds all {@link PaymentDetails} by the payment provider.

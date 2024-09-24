@@ -12,6 +12,6 @@ import java.util.List;
  * @date 22-Sep-24
  */
 
-public interface IWishListItemsServivce extends IService<WishListItem, Long> {
+public interface IWishListItems extends IService<WishListItem, Long> {
     void deleteByWishlistId(Long wishlistId);
 }

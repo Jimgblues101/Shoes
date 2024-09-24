@@ -30,7 +30,7 @@ class CartServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userService.read(61L);  // Ensure the user is initialized and associated with the cart
+        user = userService.read(5L);  // Ensure the user is initialized and associated with the cart
 
         // Create a sample Cart object using the factory method
         cart = CartFactory.createCart(

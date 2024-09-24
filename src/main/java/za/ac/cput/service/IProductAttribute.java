@@ -10,6 +10,6 @@ import za.ac.cput.domain.ProductAttribute;
  * @date 25-Aug-24
  */
 
-public interface IProductAttributeService extends IService<ProductAttribute, Long>{
+public interface IProductAttribute extends IService<ProductAttribute, Long>{
 
 }

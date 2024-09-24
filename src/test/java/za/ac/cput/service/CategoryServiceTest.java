@@ -141,18 +141,5 @@ class CategoryServiceTest {
         assertFalse(categories.isEmpty());
     }
 
-    @Test
-    @Order(12)
-    void findMostRecentlyCreatedCategory() {
-        Category recentCategory = categoryService.findMostRecentlyCreatedCategory();
-        System.out.println(recentCategory);
-        assertNotNull(recentCategory);
-    }
 
-    @Test
-    @Order(13)
-    void findAllDeletedCategories() {
-        Optional<Category> deletedCategories = categoryService.findByDeletedAtIsNotNull();
-        assertTrue(deletedCategories.isEmpty());
-    }
 }

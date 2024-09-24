@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.ac.cput.domain.Cart;
-import za.ac.cput.domain.CartItem;
 import za.ac.cput.factory.CartFactory;
 import za.ac.cput.repository.CartRepository;
 
@@ -25,7 +24,7 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional
-public class CartService implements ICartService {
+public class CartService implements ICart {
 
     private final CartRepository cartRepository;
     private final CartItemService cartItemService;
@@ -83,15 +82,21 @@ public class CartService implements ICartService {
     }
 
     /**
-     * Deletes a Cart by its ID.
+     * Deletes a Cart and cart items by its Cart ID.
      *
      * @param id the ID of the Cart to be deleted
+     * @return true if deteled successfully, otherwise false
      */
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         cartItemService.deleteByCartId(id);
-        cartRepository.deleteById(id);
+        cartRepository.deleteById(id); // Use deleteById (standard JpaRepository method)
 
+        // Check if the entity still exists after deletion
+        boolean exists = cartRepository.existsById(id);
+
+        // Return true if it no longer exists (successful deletion), otherwise return false
+        return !exists;
     }
 
     /**

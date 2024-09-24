@@ -7,7 +7,7 @@ import java.util.Objects;
 
 /**
  * Represents a cart item entry in the system.
- * Each entry is associated with a Cart, a Product, and a ProductSku.
+ * Each entry is associated with a Cart, a Product, and a ProductSkuService.
  *
  * This entity class is mapped to the "cart_item" table in the database.
  * Includes the necessary mappings for relationships to other entities.

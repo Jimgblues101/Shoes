@@ -1,8 +1,8 @@
+/*
 package za.ac.cput.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import za.ac.cput.domain.*;
 import za.ac.cput.enums.ProductAttributeType;
@@ -10,8 +10,6 @@ import za.ac.cput.factory.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,44 +18,91 @@ public abstract class BaseServiceTest {
 
     @Autowired
     protected CartItemService cartItemService;
+    @Autowired
+    protected CartService cartService;
+    @Autowired
+    protected ProductService productService;
+    @Autowired
+    protected ProductSkuService productSkuService;
+    @Autowired
+    protected UserService userService;
+    @Autowired
+    protected AddressService addressService;
+    @Autowired
+    protected OrderDetailsService orderDetailsService;
+    @Autowired
+    protected OrderItemService orderItemService;
+    @Autowired
+    protected PaymentDetailsService paymentDetailsService;
+    @Autowired
+    protected WishlistService wishlistService;
+    @Autowired
+    protected ProductAttributeService productAttributeService;
+    @Autowired
+    protected CategoryService categoryService;
+    @Autowired
+    protected SubCategoryService subCategoryService;
 
     protected Cart cart;
     protected Product product;
-    protected ProductSku productSku;
-    protected Set<String> roles;
+    protected ProductSkuService productSku;
     protected User user;
-    protected CartItem cartItem1;
-    protected CartItem cartItem2; // Changed to instance variables
     protected Address address;
     protected OrderDetails orderDetails;
     protected OrderItem orderItem;
     protected PaymentDetails paymentDetails;
     protected Wishlist wishlist;
     protected List<WishListItem> wishListItems;
+    protected Category category;
+    protected SubCategory subCategory;
 
     @BeforeEach
     void setUp() {
-        // Initialize user roles
-        roles = new HashSet<>();
-        roles.add("Admin");
-        roles.add("User");
+        // Setup User
+        setupUser();
 
-        // Create a sample User object
-        user = UserFactory.createUser(
-                null,
-                "avatar.jpg",
-                "Rethabile",
-                "Ntsekhe",
-                "servicetest@address.com",
-                LocalDate.parse("1990-01-01"),
-                roles,
-                "0123456789",
-                "password123"
-        );
+        // Setup Address
+        setupAddress();
 
-        // Set up an Address object associated with the user
+        // Setup Product, Category, and SubCategory
+        setupCategoryAndProduct();
+
+        // Setup Cart and CartItems
+        setupCartAndCartItems();
+
+        // Setup PaymentDetails and OrderDetails
+        setupPaymentAndOrderDetails();
+
+        // Setup OrderItem
+        setupOrderItem();
+
+        // Setup Wishlist and WishlistItems
+        setupWishlistAndItems();
+
+        // Setup ProductAttribute and ProductSkuService
+        setupProductAttributeAndSku();
+    }
+
+    private void setupUser() {
+        // Create or fetch an existing user
+        user = userService.read(61L); // Adjust if necessary for tests
+        if (user == null) {
+            user = new User.Builder()
+                    .setFirstName("Rethabile")
+                    .setLastName("Ntsekhe")
+                    .setEmail("rethabile1154@gmail.com")
+                    .setPassword("password")
+                    .setRole(Set.of("USER","ADMIN"))
+                    .setBirthDate(LocalDate.of(1990, 1, 1))
+                    .setPhoneNumber("1234567890")
+                    .build();
+            userService.create(user);
+        }
+    }
+
+    private void setupAddress() {
+        // Create an Address for the user
         address = new Address.Builder()
-                .setId(1L)
                 .setUser(user)
                 .setTitle("Home")
                 .setAddressLine1("Apt 101")
@@ -65,58 +110,129 @@ public abstract class BaseServiceTest {
                 .setCountry("South Africa")
                 .setCity("Cape Town")
                 .setPostalCode("9320")
-                .setPhoneNumber( "1234567890")
+                .setPhoneNumber("1234567890")
                 .setCreatedAt(LocalDateTime.now())
-                .setUpdatedAt(null)
                 .build();
+        addressService.create(address);
+    }
 
-        // Set up the Cart
-        cart = CartFactory.createCart(
-                1L,
-                user,
-                800.0,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+    private void setupCategoryAndProduct() {
+        // Create Category and SubCategory
+        category = CategoryFactory.createCategory(
+                null, "Art", "Category for Art products", LocalDateTime.now(), null);
+        category = categoryService.create(category);
 
-        // Set up the Product
-        ImageUrls imageUrls = ImageUrlsFactory.createImageUrls(
-                "image1.jpg",
-                "image2.jpg",
-                "image3.jpg",
-                "image4.jpg"
-        );
+        subCategory = SubCategoryFactory.createSubCategory(
+                null, category, "High Tops", "High Top Sneakers", LocalDateTime.now(), null);
+        subCategory = subCategoryService.create(subCategory);
 
-        Category category = CategoryFactory.createCategory(
-                1L,
-                "Sneakers",
-                "Sneakers",
-                LocalDateTime.now(),
-                null
-        );
-
-        SubCategory subCategory = SubCategoryFactory.createSubCategory(
-                1L,
-                category,
-                "High Tops",
-                "High Top Sneakers",
-                LocalDateTime.now(),
-                null
-        );
-
+        // Create Product
         product = ProductFactory.createProduct(
-                1L,
+                null,
                 "AirForce 1",
                 "All White AirForce 1",
                 "Nike AirForce 1",
                 "cover img url",
-                imageUrls,
+                new ImageUrls.Builder()
+                        .setImageUrl1 ("img1.jpg")
+                        .setImageUrl2 ("img2.jpg")
+                        .setImageUrl3 ("img3.jpg")
+                        .setImageUrl4 ("img4.jpg")
+                        .build(),
                 List.of(subCategory),
                 LocalDateTime.now(),
                 null
         );
+        product = productService.create(product);
+    }
 
-        // Set up Product attributes
+    private void setupCartAndCartItems() {
+        // Create a Cart for the user
+        cart = CartFactory.createCart(
+                null,
+                user,
+                1000.0,
+                LocalDateTime.now(),
+                null
+        );
+        cart = cartService.create(cart);
+
+        // Create CartItem linked to Cart and Product
+        CartItem cartItem = CartItemFactory.createCartItem(
+                null,
+                cart,
+                product,
+                productSkuService.read(1L),
+                2
+        );
+        cartItemService.create(cartItem);
+    }
+
+    private void setupPaymentAndOrderDetails() {
+        // Create PaymentDetails
+        paymentDetails = PaymentDetailsFactory.createPaymentDetails(
+                null,
+                null,
+                100.0,
+                "Visa",
+                "Success",
+                LocalDateTime.now(),
+                null
+        );
+        paymentDetails = paymentDetailsService.create(paymentDetails);
+
+        // Create OrderDetails linked to PaymentDetails
+        orderDetails = OrderDetailsFactory.createOrderDetails(
+                null,
+                user,
+                paymentDetails,
+                100.0,
+                LocalDateTime.now(),
+                null
+        );
+        orderDetails = orderDetailsService.create(orderDetails);
+    }
+
+    private void setupOrderItem() {
+        // Create OrderItem linked to OrderDetails and Product
+        orderItem = OrderItemFactory.createOrderItem(
+                null,
+                orderDetails,
+                product,
+                productSkuService.read(1L),
+                2,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+        orderItemService.create(orderItem);
+    }
+
+    private void setupWishlistAndItems() {
+        // Create Wishlist for User
+        wishlist = new Wishlist.Builder()
+                .setUser(user)
+                .setCreatedAt(LocalDateTime.now())
+                .build();
+        wishlist = wishlistService.create(wishlist);
+
+        // Create WishlistItems for Wishlist
+        WishListItem item1 = new WishListItem.Builder()
+                .setProduct(product)
+                .setDateAdded(LocalDateTime.now())
+                .setWishlist(wishlist)
+                .build();
+
+        WishListItem item2 = new WishListItem.Builder()
+                .setProduct(product)
+                .setDateAdded(LocalDateTime.now())
+                .setWishlist(wishlist)
+                .build();
+
+        wishListItems = List.of(item1, item2);
+    }
+
+    private void setupProductAttributeAndSku() {
+        // Create ProductAttribute and ProductSkuService
         ProductAttribute sizeAttribute = ProductAttributeFactory.createProductAttribute(
                 null,
                 ProductAttributeType.SIZE,
@@ -124,109 +240,21 @@ public abstract class BaseServiceTest {
                 LocalDateTime.now(),
                 null
         );
+        productAttributeService.create(sizeAttribute);
 
-        ProductAttribute colorAttribute = ProductAttributeFactory.createProductAttribute(
-                null,
-                ProductAttributeType.COLOR,
-                "Green",
-                LocalDateTime.now(),
-                null
-        );
-
-        ProductAttribute brandAttribute = ProductAttributeFactory.createProductAttribute(
-                null,
-                ProductAttributeType.BRAND,
-                "Nike",
-                LocalDateTime.now(),
-                null
-        );
-
-        // Create Product SKU
         productSku = ProductSkuFactory.createProductSku(
                 null,
                 product,
                 sizeAttribute,
-                colorAttribute,
-                brandAttribute,
-                "SKU-123",
+                productAttributeService.read(11L),
+                productAttributeService.read(10L),
+                "SKU-" + System.currentTimeMillis(),
                 100.0,
                 10,
                 LocalDateTime.now(),
                 null
         );
-
-        // Set up CartItems
-        cartItem1 = CartItemFactory.createCartItem(
-                1L,
-                cart,
-                product,
-                productSku,
-                2
-        );
-
-        cartItem2 = CartItemFactory.createCartItem(
-                2L,
-                cart,
-                product,
-                productSku,
-                10
-         );
-
-        // Set up OrderDetails
-        orderDetails = OrderDetailsFactory.createOrderDetails(
-                1L,
-                user,
-                paymentDetails,
-                100.0,
-                LocalDateTime.parse("2024-06-12T00:00:00"),
-                LocalDateTime.parse("2024-06-12T00:00:00")
-        );
-
-        // Set up PaymentDetails
-        paymentDetails = PaymentDetailsFactory.createPaymentDetails(
-                1L,
-                orderDetails,
-                100.0,
-                "PayPal",
-                "Success",
-                LocalDateTime.parse("2024-06-12T12:00:00"),
-                LocalDateTime.parse("2024-06-12T12:00:00")
-        );
-
-        // Set up OrderItem
-        orderItem = OrderItemFactory.createOrderItem(
-                1L,
-                orderDetails,
-                product,
-                productSku,
-                2,
-                LocalDateTime.parse("2024-06-12T08:00"),
-                LocalDateTime.parse("2024-06-12T08:00")
-        );
-
-        // Set up Wishlist and WishlistItems
-        WishListItem wishlistItem1 = WishlistItemFactory.createWishlistItem(
-                product,
-                wishlist,
-                LocalDateTime.now()
-        );
-
-        WishListItem wishlistItem2 = WishlistItemFactory.createWishlistItem(
-                product,
-                wishlist,
-                LocalDateTime.now()
-        );
-
-        wishListItems = new ArrayList<>();
-        wishListItems.add(wishlistItem1);
-        wishListItems.add(wishlistItem2);
-
-        wishlist = WishlistFactory.createWishlist(
-                1L,
-                user,
-                wishListItems,
-                LocalDateTime.now(),
-                null
-        );
+        productSkuService.create(productSku);
     }
 }
+*/

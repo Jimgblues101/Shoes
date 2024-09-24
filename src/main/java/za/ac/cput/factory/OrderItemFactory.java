@@ -58,31 +58,31 @@ public class OrderItemFactory {
         // Use switch statement to throw exception based on the flags
         switch (errorFlags) {
             case ORDER_DETAILS_NULL | PRODUCT_NULL | PRODUCT_SKU_NULL | QUANTITY_NULL:
-                throw new IllegalArgumentException("OrderDetails ID, Product ID, ProductSku ID, and Quantity cannot be null");
+                throw new IllegalArgumentException("OrderDetails ID, Product ID, ProductSkuService ID, and Quantity cannot be null");
             case ORDER_DETAILS_NULL | PRODUCT_NULL | PRODUCT_SKU_NULL:
-                throw new IllegalArgumentException("OrderDetails ID, Product ID, and ProductSku ID cannot be null");
+                throw new IllegalArgumentException("OrderDetails ID, Product ID, and ProductSkuService ID cannot be null");
             case ORDER_DETAILS_NULL | PRODUCT_NULL | QUANTITY_NULL:
                 throw new IllegalArgumentException("OrderDetails ID, Product ID, and Quantity cannot be null");
             case ORDER_DETAILS_NULL | PRODUCT_SKU_NULL | QUANTITY_NULL:
-                throw new IllegalArgumentException("OrderDetails ID, ProductSku ID, and Quantity cannot be null");
+                throw new IllegalArgumentException("OrderDetails ID, ProductSkuService ID, and Quantity cannot be null");
             case PRODUCT_NULL | PRODUCT_SKU_NULL | QUANTITY_NULL:
-                throw new IllegalArgumentException("Product ID, ProductSku ID, and Quantity cannot be null");
+                throw new IllegalArgumentException("Product ID, ProductSkuService ID, and Quantity cannot be null");
             case ORDER_DETAILS_NULL | PRODUCT_SKU_NULL:
-                throw new IllegalArgumentException("OrderDetails ID and ProductSku ID cannot be null");
+                throw new IllegalArgumentException("OrderDetails ID and ProductSkuService ID cannot be null");
             case ORDER_DETAILS_NULL | QUANTITY_NULL:
                 throw new IllegalArgumentException("OrderDetails ID and Quantity cannot be null");
             case PRODUCT_NULL | PRODUCT_SKU_NULL:
-                throw new IllegalArgumentException("Product ID and ProductSku ID cannot be null");
+                throw new IllegalArgumentException("Product ID and ProductSkuService ID cannot be null");
             case PRODUCT_NULL | QUANTITY_NULL:
                 throw new IllegalArgumentException("Product ID and Quantity cannot be null");
             case PRODUCT_SKU_NULL | QUANTITY_NULL:
-                throw new IllegalArgumentException("ProductSku ID and Quantity cannot be null");
+                throw new IllegalArgumentException("ProductSkuService ID and Quantity cannot be null");
             case ORDER_DETAILS_NULL:
                 throw new IllegalArgumentException("OrderDetails ID cannot be null");
             case PRODUCT_NULL:
                 throw new IllegalArgumentException("Product ID cannot be null");
             case PRODUCT_SKU_NULL:
-                throw new IllegalArgumentException("ProductSku ID cannot be null");
+                throw new IllegalArgumentException("ProductSkuService ID cannot be null");
             case QUANTITY_NULL:
                 throw new IllegalArgumentException("Quantity cannot be null");
             default:

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class WishlistService implements iWishlistService {
+public class WishlistService implements iWishlist {
 
     private final WishlistRepository wishlistRepository;
     private final WishListItemService wishListItemService;
@@ -91,14 +91,21 @@ public class WishlistService implements iWishlistService {
     }
 
     /**
-     * Delete a wishlist by its ID.
+     * Delete a wishlist and wishlist Items by its ID.
      *
      * @param id the ID of the wishlist to delete
+     * @return
      */
-    @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
+
         wishListItemService.deleteByWishlistId(id);
         wishlistRepository.deleteById(id);
+
+        // Check if the entity still exists after deletion
+        boolean exists = wishlistRepository.existsById(id);
+
+        // Return false if entity was deleted successfully, otherwise return true
+        return !exists;
     }
 
     /**

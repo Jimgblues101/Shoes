@@ -11,7 +11,7 @@ import za.ac.cput.domain.Product;
  * @date 25-Aug-24
  */
 
-public interface IProductService extends IService<Product, Long>{
+public interface IProduct extends IService<Product, Long>{
 
 }
 

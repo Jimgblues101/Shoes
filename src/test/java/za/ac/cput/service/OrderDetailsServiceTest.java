@@ -37,7 +37,7 @@ class OrderDetailsServiceTest {
     @BeforeEach
     void setUp() {
         // Set up a user for order details (assuming a valid test user exists)
-        user = userService.read(62L);
+        user = userService.read(2L);
 
         // Step 1: Create and persist PaymentDetails first
         testPaymentDetails = PaymentDetailsFactory.createPaymentDetails(

@@ -51,7 +51,7 @@ public class PaymentDetails {
     public String toString() {
         return "\n PaymentDetails{" +
                 "id=" + id +
-                ", orderDetails=" + orderDetails.getTotal() +
+                ", orderDetails=" + orderDetails +
                 ", amount=" + amount +
                 ", provider='" + provider + '\'' +
                 ", status='" + status + '\'' +

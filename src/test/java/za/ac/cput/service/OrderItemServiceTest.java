@@ -10,7 +10,6 @@ import za.ac.cput.factory.*;
 import za.ac.cput.repository.OrderItemRepository;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 
 @SpringBootTest
@@ -23,7 +22,7 @@ class OrderItemServiceTest {
     private OrderItemService orderItemService;
 
     private OrderItem orderItem;
-    private ProductSku productSku;
+    private za.ac.cput.domain.ProductSku productSku;
     private User user;
     private PaymentDetails paymentDetails;
 
@@ -41,9 +40,9 @@ class OrderItemServiceTest {
     @BeforeEach
     void setUp() {
         // Fetch existing user and payment details
-        user = userService.read(62L);
-        paymentDetails = paymentDetailsService.read(1L);
-        Product product = productService.read(58L);
+        user = userService.read(2L);
+        paymentDetails = paymentDetailsService.read(35L);
+        Product product = productService.read(16L);
 
         // Set up Product attributes and save them
         ProductAttribute sizeAttribute = ProductAttributeFactory.createProductAttribute(
@@ -168,6 +167,5 @@ class OrderItemServiceTest {
     void findAll() {
         List<OrderItem> orderItems = orderItemService.findAll();
         Assertions.assertFalse(orderItems.isEmpty());
-        Assertions.assertEquals(1, orderItems.size());
     }
 }

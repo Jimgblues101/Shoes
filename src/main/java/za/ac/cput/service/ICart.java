@@ -15,7 +15,7 @@ import java.util.List;
  * @autor Rethabile Ntsekhe
  * @date 25-Aug-24
  */
-public interface ICartService extends IService<Cart, Long> {
+public interface ICart extends IService<Cart, Long> {
 
     /**
      * Finds all Carts associated with a given userId.

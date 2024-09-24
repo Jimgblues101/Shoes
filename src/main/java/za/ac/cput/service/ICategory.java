@@ -16,7 +16,7 @@ import java.util.Optional;
  * @date 25-Aug-24
  */
 
-public interface ICategoryService extends IService<Category, Long> {
+public interface ICategory extends IService<Category, Long> {
     /**
      * Finds all categories with a specific name.
      *

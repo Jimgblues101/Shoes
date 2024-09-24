@@ -74,7 +74,7 @@ public class ProductSku {
 
     @Override
     public String toString() {
-        return "\n ProductSku{" +
+        return "\n ProductSkuService{" +
                 "id=" + id +
                 ", product=" + product +
                 ", sizeAttribute=" + sizeAttribute +

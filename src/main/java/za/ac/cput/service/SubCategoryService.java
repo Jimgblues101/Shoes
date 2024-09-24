@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import za.ac.cput.domain.SubCategory;
 import za.ac.cput.repository.SubCategoryRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class SubCategoryService implements ISubCategoryService {
+public class SubCategoryService implements ISubCategory {
 
     private final SubCategoryRepository subCategoryRepository;
 
@@ -56,9 +55,14 @@ public class SubCategoryService implements ISubCategoryService {
         }
     }
 
-    @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         subCategoryRepository.deleteById(id);
+
+        // Check if the entity still exists after deletion
+        boolean exists = subCategoryRepository.existsById(id);
+
+        // Return false if entity was deleted successfully, otherwise return true
+        return !exists;
     }
 
     @Override

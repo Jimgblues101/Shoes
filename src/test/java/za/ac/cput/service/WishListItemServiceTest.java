@@ -35,8 +35,8 @@ class WishListItemServiceTest {
 
     @BeforeEach
     void setUp() {
-        product = productService.read(1L);  // Fetching a product from the database
-        wishlist = wishlistService.read(1L); // Fetching a wishlist from the database
+        product = productService.read(16L);  // Fetching a product from the database
+        wishlist = wishlistService.read(7L); // Fetching a wishlist from the database
 
         // Create WishListItems
         WishListItem item1 = new WishListItem.Builder()
@@ -118,5 +118,6 @@ class WishListItemServiceTest {
         service.delete(createdItem.getId());
         WishListItem deletedItem = service.read(createdItem.getId());
         assertNull(deletedItem); // The item should be deleted, so reading should return null
+
     }
 }

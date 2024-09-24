@@ -6,14 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import za.ac.cput.domain.Category;
 import za.ac.cput.repository.CategoryRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class CategoryService implements ICategoryService {
+public class CategoryService implements ICategory {
 
     private final CategoryRepository categoryRepository;
 
@@ -50,9 +49,16 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public void delete(Long id) {
-        categoryRepository.deleteById(id);
+    public boolean delete(Long id) {
+        categoryRepository.deleteById(id); // Use deleteById (standard JpaRepository method)
+
+        // Check if the entity still exists after deletion
+        boolean exists = categoryRepository.existsById(id);
+
+        // Return true if it no longer exists (successful deletion), otherwise return false
+        return !exists;
     }
+
 
     @Override
     public List<Category> findAll() {

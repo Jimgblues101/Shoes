@@ -10,7 +10,7 @@ import za.ac.cput.domain.SubCategory;
  * @date 25-Aug-24
  */
 
-public interface ISubCategoryService extends IService<SubCategory, Long>{
+public interface ISubCategory extends IService<SubCategory, Long>{
 
     SubCategory findById(Long id);
 }

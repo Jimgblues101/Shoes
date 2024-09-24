@@ -102,7 +102,7 @@ public class ProductSkuFactory {
                 break;
         }
 
-        // Use the Builder pattern to create a new ProductSku object
+        // Use the Builder pattern to create a new ProductSkuService object
         return new ProductSku.Builder()
                 .setId(id)
                 .setProduct(product)

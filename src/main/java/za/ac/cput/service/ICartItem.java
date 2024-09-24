@@ -13,7 +13,7 @@ import java.util.List;
  * Author: Rethabile Ntsekhe
  * Date: 25-Aug-24
  */
-public interface ICartItemService extends IService<CartItem, Long> {
+public interface ICartItem extends IService<CartItem, Long> {
 
     /**
      * Finds CartItems by their associated Cart ID.
@@ -34,7 +34,7 @@ public interface ICartItemService extends IService<CartItem, Long> {
     /**
      * Finds CartItems by their associated Product SKU ID.
      *
-     * @param productSkuId the ID of the ProductSku entity to search by
+     * @param productSkuId the ID of the ProductSkuService entity to search by
      * @return a list of CartItems associated with the given Product SKU ID
      */
     List<CartItem> findByProductSkuId(Long productSkuId);

@@ -1,8 +1,6 @@
 package za.ac.cput.service;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -20,8 +18,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@SpringBootTest(classes = Application.class)
-@DirtiesContext(classMode = AFTER_CLASS)
+@SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class PaymentDetailsServiceTest {
 
     @Autowired
@@ -38,7 +37,8 @@ class PaymentDetailsServiceTest {
 
     @BeforeEach
     void setUp() {
-
+        orderDetails = orderDetailsService.read(1L);
+        System.out.println("Order Details: " + orderDetails);
         paymentDetails = PaymentDetailsFactory.createPaymentDetails(
                 null, // ID will be auto-generated
                 orderDetails,
@@ -48,6 +48,7 @@ class PaymentDetailsServiceTest {
                 LocalDateTime.now(),
                 null
         );
+        System.out.println("created payment details: "+paymentDetails);
         paymentDetailsService.create(paymentDetails);
     }
 
@@ -57,6 +58,7 @@ class PaymentDetailsServiceTest {
     }
 
     @Test
+    @Order(1)
     void create() {
         PaymentDetails newPaymentDetails = PaymentDetailsFactory.createPaymentDetails(
                 null,
@@ -74,6 +76,7 @@ class PaymentDetailsServiceTest {
     }
 
     @Test
+    @Order(2)
     void read() {
         PaymentDetails readPaymentDetails = paymentDetailsService.read(paymentDetails.getId());
         assertNotNull(readPaymentDetails);
@@ -81,10 +84,12 @@ class PaymentDetailsServiceTest {
     }
 
     @Test
+    @Order(3)
     void update() {
         paymentDetails = new PaymentDetails.Builder()
                 .copy(paymentDetails)
                 .setId(paymentDetails.getId())
+                .setProvider("PayPal")
                 .setAmount(2000.00)
                 .build();
         PaymentDetails updatedPaymentDetails = paymentDetailsService.update(paymentDetails);
@@ -95,6 +100,7 @@ class PaymentDetailsServiceTest {
     }
 
     @Test
+    @Order(4)
     void delete() {
         paymentDetailsService.delete(paymentDetails.getId());
         PaymentDetails deletedPaymentDetails = paymentDetailsService.read(paymentDetails.getId());
@@ -102,21 +108,39 @@ class PaymentDetailsServiceTest {
     }
 
     @Test
+    @Order(5)
     void findAll() {
         List<PaymentDetails> paymentDetailsList = paymentDetailsService.findAll();
         assertFalse(paymentDetailsList.isEmpty());
     }
 
     @Test
+    @Order(6)
     void findByProvider() {
+        // Setup test data (optional, if not already handled)
+        PaymentDetails testPayment = new PaymentDetails.Builder()
+                .copy(paymentDetails)
+                .setId(null)
+                .setProvider("PayPal")
+                .build();
+
+        paymentDetailsService.create(testPayment); // Assuming you have a create method in your service
+
+        // Call the method to test
         List<PaymentDetails> paymentsByProvider = paymentDetailsService.findByProvider("PayPal");
+
+        // Debugging output (optional)
         System.out.println("------------------------------------------------------------------");
         System.out.println(paymentsByProvider);
-        assertFalse(paymentsByProvider.isEmpty());
-        assertEquals("PayPal", paymentsByProvider.get(0).getProvider());
+
+        // Assertions
+        assertFalse(paymentsByProvider.isEmpty(), "Payment list should not be empty"); // Check that the list is not empty
+        assertEquals("PayPal", paymentsByProvider.get(0).getProvider(), "Provider should be 'PayPal'"); // Ensure the first payment's provider is "PayPal"
     }
 
+
     @Test
+    @Order(7)
     void findByStatus() {
         List<PaymentDetails> paymentsByStatus = paymentDetailsService.findByStatus("Paid");
         assertFalse(paymentsByStatus.isEmpty());
@@ -124,12 +148,14 @@ class PaymentDetailsServiceTest {
     }
 
     @Test
+    @Order(10)
     void findByCreatedAtAfter() {
         List<PaymentDetails> paymentsAfterDate = paymentDetailsService.findByCreatedAtAfter(LocalDateTime.now().minusDays(1));
         assertFalse(paymentsAfterDate.isEmpty());
     }
 
     @Test
+    @Order(11)
     void findByCreatedAtBetween() {
         List<PaymentDetails> paymentsBetweenDates = paymentDetailsService.findByCreatedAtBetween(
                 LocalDateTime.now().minusDays(1),
@@ -139,12 +165,14 @@ class PaymentDetailsServiceTest {
     }
 
     @Test
+    @Order(8)
     void countByStatus() {
         long count = paymentDetailsService.countByStatus("Paid");
         assertTrue(count > 0);
     }
 
     @Test
+    @Order(9)
     void deleteByOrderDetailsId() {
         int deletedCount = paymentDetailsService.deleteByOrderDetailsId(1L);
         assertTrue(deletedCount > 0);

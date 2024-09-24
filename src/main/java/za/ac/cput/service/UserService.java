@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Service class for handling user-related operations.
  * Implements {@link UserDetailsService} for user authentication.
- * Implements {@link IUserService} for user CRUD operations.
+ * Implements {@link IUser} for user CRUD operations.
  * <p>
  * Author: Rethabile Ntsekhe
  * Date: 24-Aug-24
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class UserService implements UserDetailsService, IUserService {
+public class UserService implements UserDetailsService, IUser {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -75,9 +75,14 @@ public class UserService implements UserDetailsService, IUserService {
         }
     }
 
-    @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         userRepository.deleteById(id);
+
+        // Check if the entity still exists after deletion
+        boolean exists = userRepository.existsById(id);
+
+        // Return false if entity was deleted successfully, otherwise return true
+        return !exists;
     }
 
     @Override

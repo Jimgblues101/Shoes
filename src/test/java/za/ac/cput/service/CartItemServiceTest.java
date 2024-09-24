@@ -36,7 +36,7 @@ class CartItemServiceTest {
 
     private Cart cart;
     private Product product;
-    private ProductSku productSku;
+    private za.ac.cput.domain.ProductSku productSku;
 
     private User user;
     private CartItem cartItem;
@@ -46,8 +46,8 @@ class CartItemServiceTest {
     @BeforeEach
     void setUp() {
 
-        user = userService.read(61L);
-        product = productService.read(59L);
+        user = userService.read(2L);
+        product = productService.read(16L);
         productSku = productSkuService.read(1L);
 
         cart = CartFactory.createCart(

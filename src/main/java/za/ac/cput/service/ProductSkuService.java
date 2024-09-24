@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional
-public class ProductSkuService implements IProductSkuService {
+public class ProductSkuService implements IProductSku {
 
     private final ProductSkuRepository productSkuRepository;
 
@@ -30,7 +30,7 @@ public class ProductSkuService implements IProductSkuService {
     }
 
     @Override
-    public ProductSku create(ProductSku productSku) {
+    public za.ac.cput.domain.ProductSku create(za.ac.cput.domain.ProductSku productSku) {
         return productSkuRepository.save(productSku);
     }
 
@@ -40,11 +40,11 @@ public class ProductSkuService implements IProductSkuService {
     }
 
     @Override
-    public ProductSku update(ProductSku productSku) {
-        ProductSku existingProductSku = productSkuRepository.findById(productSku.getId()).orElse(null);
+    public za.ac.cput.domain.ProductSku update(za.ac.cput.domain.ProductSku productSku) {
+        za.ac.cput.domain.ProductSku existingProductSku = productSkuRepository.findById(productSku.getId()).orElse(null);
 
         if (existingProductSku != null) {
-            ProductSku updatedProductSku = new ProductSku.Builder()
+            za.ac.cput.domain.ProductSku updatedProductSku = new za.ac.cput.domain.ProductSku.Builder()
                     .copy(existingProductSku)
                     .setId(existingProductSku.getId())
                     .setProduct(productSku.getProduct())
@@ -64,13 +64,18 @@ public class ProductSkuService implements IProductSkuService {
         }
     }
 
-    @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         productSkuRepository.deleteById(id);
+
+        // Check if the entity still exists after deletion
+        boolean exists = productSkuRepository.existsById(id);
+
+        // Return false if entity was deleted successfully, otherwise return true
+        return !exists;
     }
 
     @Override
-    public List<ProductSku> findAll() {
+    public List<za.ac.cput.domain.ProductSku> findAll() {
         return productSkuRepository.findAll();
     }
 }

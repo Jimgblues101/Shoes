@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional
-public class OrderItemService implements IOrderItemService {
+public class OrderItemService implements IOrderItem {
 
     private final OrderItemRepository orderItemRepository;
 
@@ -59,9 +59,14 @@ public class OrderItemService implements IOrderItemService {
         }
     }
 
-    @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         orderItemRepository.deleteById(id);
+
+        // Check if the entity still exists after deletion
+        boolean exists = orderItemRepository.existsById(id);
+
+        // Return false if entity was deleted successfully, otherwise return true
+        return !exists;
     }
 
     @Override

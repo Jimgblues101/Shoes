@@ -26,7 +26,7 @@ class CartItemFactoryTest {
         // Initialize valid objects for testing
         cart = new Cart();  // Assuming Cart has a no-arg constructor
         product = new Product();  // Assuming Product has a no-arg constructor
-        productSku = new ProductSku();  // Assuming ProductSku has a no-arg constructor
+        productSku = new ProductSku();  // Assuming ProductSkuService has a no-arg constructor
     }
 
     @Test
@@ -74,12 +74,12 @@ class CartItemFactoryTest {
 
     @Test
     void testCreateCartItem_WithNullProductSku_ThrowsIllegalArgumentException() {
-        // Test with null ProductSku, expecting IllegalArgumentException
+        // Test with null ProductSkuService, expecting IllegalArgumentException
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> CartItemFactory.createCartItem(1L, cart, product, null, 10));
 
-        assertEquals("ProductSku cannot be null", exception.getMessage());
+        assertEquals("ProductSkuService cannot be null", exception.getMessage());
 
         // Print the exception message to the terminal
         System.out.println("Expected exception: " + exception.getMessage());
@@ -118,7 +118,7 @@ class CartItemFactoryTest {
                 IllegalArgumentException.class,
                 () -> CartItemFactory.createCartItem(1L, null, null, null, 0));
 
-        assertEquals("Cart, Product, ProductSku cannot be null and Quantity must be greater than zero", exception.getMessage());
+        assertEquals("Cart, Product, ProductSkuService cannot be null and Quantity must be greater than zero", exception.getMessage());
 
         // Print the exception message to the terminal
         System.out.println("Expected exception: " + exception.getMessage());

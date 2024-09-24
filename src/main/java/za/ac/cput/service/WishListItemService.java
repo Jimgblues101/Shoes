@@ -7,7 +7,6 @@ import za.ac.cput.domain.WishListItem;
 import za.ac.cput.repository.WishListItemRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * WishListItemService.java
@@ -20,7 +19,7 @@ import java.util.Optional;
  */
 @Service
 @Transactional
-public class WishListItemService implements IWishListItemsServivce {
+public class WishListItemService implements IWishListItems {
 
     @Autowired
     private final WishListItemRepository repository;
@@ -66,17 +65,22 @@ public class WishListItemService implements IWishListItemsServivce {
     }
 
     @Override
-    public void delete(Long id) {
-        Optional<WishListItem> wishListItem = repository.findById(id);
-        if (wishListItem.isPresent()) {
-            repository.delete(wishListItem.get());
-        } else {
-            throw new IllegalArgumentException("WishlistItem with ID " + id + " does not exist");
-        }
+    public boolean delete(Long id) {
+        repository.deleteById(id);
+
+        // Check if the entity still exists after deletion
+        boolean exists = repository.existsById(id);
+
+        // Return false if entity was deleted successfully, otherwise return true
+        return !exists;
     }
 
     @Override
     public void deleteByWishlistId(Long wishlistId) {
         repository.deleteByWishlistId(wishlistId);
+
+        boolean exists = repository.existsById(wishlistId);
+
     }
+
 }

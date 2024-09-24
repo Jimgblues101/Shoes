@@ -14,7 +14,7 @@ import java.util.Optional;
  * @date 25-Aug-24
  */
 
-public interface IUserService extends IService<User, Long>{
+public interface IUser extends IService<User, Long>{
 
     Optional<User> findByEmail(String email);
 

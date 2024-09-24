@@ -76,7 +76,7 @@ class ProductSkuFactoryTest {
                 LocalDateTime.now(),
                 null);
 
-        // Create a sample ProductSku object
+        // Create a sample ProductSkuService object
         ProductSku productSku = ProductSkuFactory.createProductSku(
                 null,
                 product,
@@ -89,11 +89,11 @@ class ProductSkuFactoryTest {
                 LocalDateTime.now(),
                 null);
 
-        // Verify that the ProductSku object is not null
+        // Verify that the ProductSkuService object is not null
         assertNotNull(productSku);
 
-        // Print the created ProductSku object to the terminal
-        System.out.println("Created ProductSku: " + productSku);
+        // Print the created ProductSkuService object to the terminal
+        System.out.println("Created ProductSkuService: " + productSku);
     }
 
     @Test
@@ -120,7 +120,7 @@ class ProductSkuFactoryTest {
                 LocalDateTime.now(),
                 null);
 
-        // Try to create a ProductSku object with a null product
+        // Try to create a ProductSkuService object with a null product
         assertThrows(IllegalArgumentException.class,
                 () -> ProductSkuFactory.createProductSku(
                         null,
@@ -134,7 +134,7 @@ class ProductSkuFactoryTest {
                         LocalDateTime.now(),
                         null));
 
-        System.out.println("Expected IllegalArgumentException thrown when creating ProductSku with null product");
+        System.out.println("Expected IllegalArgumentException thrown when creating ProductSkuService with null product");
     }
 
     @Test
@@ -173,7 +173,7 @@ class ProductSkuFactoryTest {
                 LocalDateTime.now(),
                 null);
 
-        // Try to create a ProductSku object with a null SKU
+        // Try to create a ProductSkuService object with a null SKU
         assertThrows(IllegalArgumentException.class,
                 () -> ProductSkuFactory.createProductSku(
                         null,
@@ -187,7 +187,7 @@ class ProductSkuFactoryTest {
                         LocalDateTime.now(),
                         null));
 
-        System.out.println("Expected IllegalArgumentException thrown when creating ProductSku with null SKU");
+        System.out.println("Expected IllegalArgumentException thrown when creating ProductSkuService with null SKU");
     }
 
     @Test
@@ -226,7 +226,7 @@ class ProductSkuFactoryTest {
                 LocalDateTime.now(),
                 null);
 
-        // Try to create a ProductSku object with a zero quantity
+        // Try to create a ProductSkuService object with a zero quantity
         assertThrows(IllegalArgumentException.class,
                 () -> ProductSkuFactory.createProductSku(
                         null,
@@ -240,6 +240,6 @@ class ProductSkuFactoryTest {
                         LocalDateTime.now(),
                         null));
 
-        System.out.println("Expected IllegalArgumentException thrown when creating ProductSku with zero quantity");
+        System.out.println("Expected IllegalArgumentException thrown when creating ProductSkuService with zero quantity");
     }
 }

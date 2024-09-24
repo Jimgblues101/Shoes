@@ -11,6 +11,6 @@ import za.ac.cput.domain.OrderItem;
  * @date 25-Aug-24
  */
 
-public interface IOrderItemService extends IService<OrderItem, Long>{
+public interface IOrderItem extends IService<OrderItem, Long>{
     void deleteOrderItemByOrderDetails_Id(Long orderId);
 }

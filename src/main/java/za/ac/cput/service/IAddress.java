@@ -13,7 +13,7 @@ import java.util.Optional;
  * Student Num: 220455430
  * @date 28-Aug-24
  */
-public interface IAddressService extends IService<Address, Long> {
+public interface IAddress extends IService<Address, Long> {
 
     /**
      * Finds all Addresses associated with a given User.

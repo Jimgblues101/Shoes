@@ -7,7 +7,6 @@ import za.ac.cput.domain.PaymentDetails;
 import za.ac.cput.factory.PaymentDetailsFactory;
 import za.ac.cput.repository.PaymentDetailsRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,7 +22,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class PaymentDetailsService implements IPaymentDetailsService {
+public class PaymentDetailsService implements IPaymentDetails {
 
     private final PaymentDetailsRepository paymentDetailsRepository;
 
@@ -63,9 +62,14 @@ public class PaymentDetailsService implements IPaymentDetailsService {
         return paymentDetailsRepository.save(updatedPaymentDetails);
     }
 
-    @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         paymentDetailsRepository.deleteById(id);
+
+        // Check if the entity still exists after deletion
+        boolean exists = paymentDetailsRepository.existsById(id);
+
+        // Return false if entity was deleted successfully, otherwise return true
+        return !exists;
     }
 
     @Override

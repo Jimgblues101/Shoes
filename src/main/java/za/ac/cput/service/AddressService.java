@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.ac.cput.domain.Address;
-import za.ac.cput.domain.User;
 import za.ac.cput.repository.AddressRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +19,7 @@ import java.util.Optional;
  */
 @Service
 @Transactional
-public class AddressService implements IAddressService {
+public class AddressService implements IAddress{
 
     private final AddressRepository addressRepository;
 
@@ -78,8 +76,14 @@ public class AddressService implements IAddressService {
 
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
+        addressRepository.deleteById(id); // Use deleteById (standard JpaRepository method)
 
+        // Check if the entity still exists after deletion
+        boolean exists = addressRepository.existsById(id);
+
+        // Return true if it no longer exists (successful deletion), otherwise return false
+        return !exists;
     }
 
     @Override

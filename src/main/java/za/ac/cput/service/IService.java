@@ -47,6 +47,7 @@ public interface IService<T ,ID>{
      * Deletes all entities with Id
      *
      * @param id void
+     * @return true if the entity was deleted, false otherwise.
      */
-    void delete(ID id);
+    boolean delete(ID id);
 }

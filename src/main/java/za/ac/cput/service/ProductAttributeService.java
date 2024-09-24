@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional
-public class ProductAttributeService implements IProductAttributeService {
+public class ProductAttributeService implements IProductAttribute {
 
     private final ProductAttributeRepository productAttributeRepository;
 
@@ -60,9 +60,14 @@ public class ProductAttributeService implements IProductAttributeService {
     }
 
 
-    @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         productAttributeRepository.deleteById(id);
+
+        // Check if the entity still exists after deletion
+        boolean exists = productAttributeRepository.existsById(id);
+
+        // Return false if entity was deleted successfully, otherwise return true
+        return !exists;
     }
 
     @Override

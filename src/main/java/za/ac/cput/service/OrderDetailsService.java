@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class OrderDetailsService implements IOrderDetailsService {
+public class OrderDetailsService implements IOrderDetails {
 
     private final OrderDetailsRepository orderDetailsRepository;
     private final OrderItemRepository orderItemRepository;
@@ -64,11 +64,14 @@ public class OrderDetailsService implements IOrderDetailsService {
         return null;
     }
 
-    @Override
-    public void delete(Long id) {
-        orderItemRepository.deleteOrderItemByOrderDetails_Id(id);
-        paymentDetailsRepository.deleteByOrderDetailsId(id);
+    public boolean delete(Long id) {
         orderDetailsRepository.deleteById(id);
+
+        // Check if the entity still exists after deletion
+        boolean exists = orderDetailsRepository.existsById(id);
+
+        // Return false if entity was deleted successfully, otherwise return true
+        return !exists;
     }
 
     @Override

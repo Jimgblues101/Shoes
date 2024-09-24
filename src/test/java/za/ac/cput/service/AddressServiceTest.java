@@ -40,7 +40,7 @@ class AddressServiceTest {
 
     @BeforeEach
     void setup() {
-        user = userService.read(62L);
+        user = userService.read(2L);
 
         // Set up an Address object associated with the user
         address = new Address.Builder()

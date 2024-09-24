@@ -7,8 +7,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import za.ac.cput.domain.Product;
 import za.ac.cput.domain.ProductAttribute;
 import za.ac.cput.domain.ProductSku;
-import za.ac.cput.enums.ProductAttributeType;
-import za.ac.cput.factory.ProductAttributeFactory;
 import za.ac.cput.factory.ProductSkuFactory;
 
 import java.time.LocalDateTime;
@@ -23,6 +21,7 @@ class ProductSkuServiceTest {
 
     @Autowired
     private ProductSkuService productSkuService;
+
     private ProductSku productSku;
 
     @Autowired

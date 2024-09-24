@@ -54,9 +54,9 @@ public class CartItemFactory {
         // Use switch statement to throw exception based on the flags
         switch (errorFlags) {
             case CART_NULL | PRODUCT_NULL | PRODUCT_SKU_NULL | QUANTITY_INVALID:
-                throw new IllegalArgumentException("Cart, Product, ProductSku cannot be null and Quantity must be greater than zero");
+                throw new IllegalArgumentException("Cart, Product, ProductSkuService cannot be null and Quantity must be greater than zero");
             case CART_NULL | PRODUCT_NULL | PRODUCT_SKU_NULL:
-                throw new IllegalArgumentException("Cart, Product, and ProductSku cannot be null");
+                throw new IllegalArgumentException("Cart, Product, and ProductSkuService cannot be null");
             case CART_NULL | PRODUCT_NULL:
                 throw new IllegalArgumentException("Cart and Product cannot be null");
             case CART_NULL:
@@ -64,7 +64,7 @@ public class CartItemFactory {
             case PRODUCT_NULL:
                 throw new IllegalArgumentException("Product cannot be null");
             case PRODUCT_SKU_NULL:
-                throw new IllegalArgumentException("ProductSku cannot be null");
+                throw new IllegalArgumentException("ProductSkuService cannot be null");
             case QUANTITY_INVALID:
                 throw new IllegalArgumentException("Quantity must be greater than zero");
             default:
